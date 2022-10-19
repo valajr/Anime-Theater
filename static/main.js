@@ -1,14 +1,3 @@
-// anime search https://gogoanime.herokuapp.com/search?keyw=naruto
-// genre https://gogoanime.herokuapp.com/genre/action
-// anime details https://gogoanime.herokuapp.com/anime-details/naruto
-// recent episode https://gogoanime.herokuapp.com/recent-release 
-// popular anime https://gogoanime.herokuapp.com/popular 
-// top airing https://gogoanime.herokuapp.com/top-airing
-// anime movies https://gogoanime.herokuapp.com/anime-movies
-// anime streaming https://gogoanime.herokuapp.com/vidcdn/watch/naruto-episode-220
-// anime streaming 2 https://gogoanime.herokuapp.com/streamsb/watch/naruto-episode-220
-// anime thread https://gogoanime.herokuapp.com/thread/spy-x-family-episode-9?page=1
-
 const API_LINK = 'https://gogoanime.herokuapp.com/';
 
 const SEARCH = {
@@ -41,8 +30,8 @@ const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
             'thriller', 'vampire', 'yaoi', 'yuri'];
 
 const MAX_RECENT = 5;
-let SLIDE_TIMEOUT = null;
-let SLIDE = 0;
+let slide_timeout = null;
+let slide = 0;
 
 async function fetchAnime(type, key='') {
     key.replace(/ /g,"-");
@@ -51,32 +40,41 @@ async function fetchAnime(type, key='') {
     return data;
 }
 
+async function searchGenre() {
+    let genre = document.querySelector('#searchGenre').value;
+    console.log(await fetchAnime(SEARCH.by_genre + genre))
+}
+
+async function searchRecent() {
+    let anime_names = document.querySelectorAll('.slide-anime');
+    let anime_slides = document.querySelectorAll('.slide > img');
+    let recent_animes = await fetchAnime(SEARCH.recent);
+
+    for(let i=0; i<MAX_RECENT; i++) {
+        anime_names[i].innerHTML = recent_animes[i][ANIME.title];
+        anime_slides[i].src = recent_animes[i][ANIME.image];
+    }
+}
+
 function addGenres(select) {
     for(i=0; i<GENRE.length; i++)
         select.innerHTML += `<option value="${GENRE[i]}">${GENRE[i]}</option>`;
 }
 
-async function searchGenre() {
-    let genre = document.querySelector('#searchGenre').value;
-    console.log(genre);
-    console.log(await fetchAnime(SEARCH.by_genre + genre))
+function nextSlide() {
+    clearTimeout(slide_timeout);
+
+    showRecents();
 }
 
-async function searchRecent() {
-    let anime_names = document.querySelectorAll('.slide-anime-name');
-    let anime_slides= document.querySelectorAll('.slide > img');
-    let recent_animes = await fetchAnime(SEARCH.recent);
+function prevSlide() {
+    clearTimeout(slide_timeout);
 
-    for(let i=0; i<MAX_RECENT; i++) {
-        console.log(anime_names[i]);
-        console.log(anime_slides[i]);
-        console.log(recent_animes[i]);
-        anime_names[i].innerHTML = recent_animes[i].animeTitle;
-        anime_slides[i].src = recent_animes[i].animeImg;
-    }
+    let prev = true;
+    showRecents(prev);
 }
 
-function showRecents() {
+function showRecents(prev=false) {
     let slides = document.querySelectorAll('.slide');
     let dots = document.querySelectorAll('.dot');
     let i;
@@ -86,13 +84,20 @@ function showRecents() {
     for(i=0; i<MAX_RECENT; i++)
         dots[i].className = dots[i].className.replace(' active', '');
 
-    SLIDE++;
-    if(SLIDE > MAX_RECENT)
-        SLIDE = 1;
+    if(!prev) {
+        slide++;
+        if(slide > MAX_RECENT)
+            slide = 1;
+    }
+    else {
+        slide--;
+        if(slide < 1)
+            slide = MAX_RECENT;
+    }
     
-    slides[SLIDE - 1].style.display = 'block';
-    dots[SLIDE - 1].className += ' active';
-    SLIDE_TIMEOUT = setTimeout(showRecents, 2000);
+    slides[slide - 1].style.display = 'block';
+    dots[slide - 1].className += ' active';
+    slide_timeout = setTimeout(showRecents, 2000);
 }
 
 

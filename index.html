@@ -8,39 +8,39 @@
     <link rel="stylesheet" href="import/style.css">
 
     <script defer src="static/main.js"></script>
+    <script src="static/APICollector.js"></script>
 </head>
 <body>
     <input type="search" id="searchName" class="bd-pattern" placeholder="Search by name">
-    <select name="search" id="searchGenre"></select>
-    <button onclick="searchGenre()"></button>
+    <select name="search" id="searchGenre" class="bd-pattern"></select>
+    <button onclick="searchGenre()" class="bd-btn bd-pattern">Search</button>
     <br>
-    <div class="carousel-recent">
+    <div class="recent-carousel">
         <div class="slide">
-            <span class="slide-number">1 / 5</span>
             <img src="#" alt="">
-            <span class="slide-anime-name"></span>
+            <span class="slide-anime"></span>
         </div>
         <div class="slide">
-            <span class="slide-number">2 / 5</span>
             <img src="#" alt="">
-            <span class="slide-anime-name"></span>
+            <span class="slide-anime"></span>
         </div>
         <div class="slide">
-            <span class="slide-number">3 / 5</span>
             <img src="#" alt="">
-            <span class="slide-anime-name"></span>
+            <span class="slide-anime"></span>
         </div>
         <div class="slide">
-            <span class="slide-number">4 / 5</span>
             <img src="#" alt="">
-            <span class="slide-anime-name"></span>
+            <span class="slide-anime"></span>
         </div>
         <div class="slide">
-            <span class="slide-number">5 / 5</span>
             <img src="#" alt="">
-            <span class="slide-anime-name"></span>
+            <span class="slide-anime"></span>
         </div>
-        <div>
+
+        <a class="prev" onclick="prevSlide()">&#10094;</a>
+        <a class="next" onclick="nextSlide()">&#10095;</a>
+        
+        <div class="dot-line">
             <span class="dot"></span>
             <span class="dot"></span>
             <span class="dot"></span>
