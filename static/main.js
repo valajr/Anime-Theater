@@ -31,12 +31,78 @@ const ANIME = {
     'episodes': 'totalEpisodes'
 }
 
+const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
+            'demons', 'drama', 'dub', 'ecchi', 'family', 'fantasy', 'game',
+            'gourmet', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic',
+            'martial-arts', 'mecha', 'military', 'mystery', 'parody', 'police',
+            'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen',
+            'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice-of-Life',
+            'space', 'sports', 'super-power', 'supernatural', 'suspense',
+            'thriller', 'vampire', 'yaoi', 'yuri'];
+
+const MAX_RECENT = 5;
+let SLIDE_TIMEOUT = null;
+let SLIDE = 0;
+
 async function fetchAnime(type, key='') {
     key.replace(/ /g,"-");
     let api_response = await fetch(API_LINK + type + key);
     let data = await api_response.json();
     return data;
 }
+
+function addGenres(select) {
+    for(i=0; i<GENRE.length; i++)
+        select.innerHTML += `<option value="${GENRE[i]}">${GENRE[i]}</option>`;
+}
+
+async function searchGenre() {
+    let genre = document.querySelector('#searchGenre').value;
+    console.log(genre);
+    console.log(await fetchAnime(SEARCH.by_genre + genre))
+}
+
+async function searchRecent() {
+    let anime_names = document.querySelectorAll('.slide-anime-name');
+    let anime_slides= document.querySelectorAll('.slide > img');
+    let recent_animes = await fetchAnime(SEARCH.recent);
+
+    for(let i=0; i<MAX_RECENT; i++) {
+        console.log(anime_names[i]);
+        console.log(anime_slides[i]);
+        console.log(recent_animes[i]);
+        anime_names[i].innerHTML = recent_animes[i].animeTitle;
+        anime_slides[i].src = recent_animes[i].animeImg;
+    }
+}
+
+function showRecents() {
+    let slides = document.querySelectorAll('.slide');
+    let dots = document.querySelectorAll('.dot');
+    let i;
+
+    for(i=0; i<MAX_RECENT; i++)
+        slides[i].style.display = 'none';
+    for(i=0; i<MAX_RECENT; i++)
+        dots[i].className = dots[i].className.replace(' active', '');
+
+    SLIDE++;
+    if(SLIDE > MAX_RECENT)
+        SLIDE = 1;
+    
+    slides[SLIDE - 1].style.display = 'block';
+    dots[SLIDE - 1].className += ' active';
+    SLIDE_TIMEOUT = setTimeout(showRecents, 2000);
+}
+
+
+addGenres(document.querySelector('#searchGenre'));
+searchRecent();
+showRecents();
+
+
+
+
 
 let search = document.querySelector('#searchName');
 
