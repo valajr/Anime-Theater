@@ -10,43 +10,85 @@
     <script defer src="static/main.js"></script>
     <script src="static/APICollector.js"></script>
 </head>
-<body>
+<div>
     <input type="search" id="searchName" class="bd-pattern" placeholder="Search by name">
     <select name="search" id="searchGenre" class="bd-pattern"></select>
     <button onclick="searchGenre()" class="bd-btn bd-pattern">Search</button>
     <br>
-    <div class="recent-carousel">
-        <div class="slide">
-            <img src="#" alt="">
-            <span class="slide-anime"></span>
-        </div>
-        <div class="slide">
-            <img src="#" alt="">
-            <span class="slide-anime"></span>
-        </div>
-        <div class="slide">
-            <img src="#" alt="">
-            <span class="slide-anime"></span>
-        </div>
-        <div class="slide">
-            <img src="#" alt="">
-            <span class="slide-anime"></span>
-        </div>
-        <div class="slide">
-            <img src="#" alt="">
-            <span class="slide-anime"></span>
-        </div>
+    <div class="anime-carousels">
+        <div class="carousel bd-pattern">
+            <span class="carousel-title">Recent Animes</span>
+            <div class="recent-carousel">
+                <div class="recent-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="recent-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="recent-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="recent-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="recent-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
 
-        <a class="prev" onclick="prevSlide()">&#10094;</a>
-        <a class="next" onclick="nextSlide()">&#10095;</a>
-        
-        <div class="dot-line">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+                <a class="prev" onclick="prevSlide('recent')">&#10094;</a>
+                <a class="next" onclick="nextSlide('recent')">&#10095;</a>
+                
+                <div class="dot-line">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+        <div class="carousel bd-pattern">
+            <span class="carousel-title">Popular Animes</span>
+            <div class="popular-carousel">
+                <div class="popular-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="popular-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="popular-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="popular-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+                <div class="popular-anime">
+                    <img src="#" alt="">
+                    <span class="anime-name"></span>
+                </div>
+
+                <a class="prev" onclick="prevSlide('popular')">&#10094;</a>
+                <a class="next" onclick="nextSlide('popular')">&#10095;</a>
+                
+                <div class="dot-line">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
         </div>
     </div>
+
 </body>
 </html>

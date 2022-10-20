@@ -30,8 +30,10 @@ const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
             'thriller', 'vampire', 'yaoi', 'yuri'];
 
 const MAX_RECENT = 5;
-let slide_timeout = null;
-let slide = 0;
+let recent_timeout = null;
+let slide_recent = 0;
+let popular_timeout = null;
+let slide_popular = 0;
 
 async function fetchAnime(type, key='') {
     key.replace(/ /g,"-");
@@ -45,14 +47,19 @@ async function searchGenre() {
     console.log(await fetchAnime(SEARCH.by_genre + genre))
 }
 
-async function searchRecent() {
-    let anime_names = document.querySelectorAll('.slide-anime');
-    let anime_slides = document.querySelectorAll('.slide > img');
-    let recent_animes = await fetchAnime(SEARCH.recent);
+async function getCarouselData(type) {
+    let anime_names = document.querySelectorAll(`.${type}-anime > .anime-name`);
+    let anime_slides = document.querySelectorAll(`.${type}-anime > img`);
+
+    let animes = [];
+    if(type === 'recent')
+        animes = await fetchAnime(SEARCH.recent);
+    else
+        animes = await fetchAnime(SEARCH.popular);
 
     for(let i=0; i<MAX_RECENT; i++) {
-        anime_names[i].innerHTML = recent_animes[i][ANIME.title];
-        anime_slides[i].src = recent_animes[i][ANIME.image];
+        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_slides[i].src = animes[i][ANIME.image];
     }
 }
 
@@ -61,22 +68,28 @@ function addGenres(select) {
         select.innerHTML += `<option value="${GENRE[i]}">${GENRE[i]}</option>`;
 }
 
-function nextSlide() {
-    clearTimeout(slide_timeout);
+function nextSlide(type) {
+    if(type === 'recent')
+        clearTimeout(recent_timeout);
+    else
+        clearTimeout(popular_timeout);
 
-    showRecents();
+    showAnimes(type);
 }
 
-function prevSlide() {
-    clearTimeout(slide_timeout);
+function prevSlide(type) {
+    if(type === 'recent')
+        clearTimeout(recent_timeout);
+    else
+        clearTimeout(popular_timeout);
 
     let prev = true;
-    showRecents(prev);
+    showAnimes(type, prev);
 }
 
-function showRecents(prev=false) {
-    let slides = document.querySelectorAll('.slide');
-    let dots = document.querySelectorAll('.dot');
+function showAnimes(type, prev=false) {
+    let slides = document.querySelectorAll(`.${type}-anime`);
+    let dots = document.querySelectorAll(`.${type}-carousel > .dot-line > .dot`);
     let i;
 
     for(i=0; i<MAX_RECENT; i++)
@@ -84,26 +97,49 @@ function showRecents(prev=false) {
     for(i=0; i<MAX_RECENT; i++)
         dots[i].className = dots[i].className.replace(' active', '');
 
-    if(!prev) {
-        slide++;
-        if(slide > MAX_RECENT)
-            slide = 1;
+    if(type === 'recent') {
+        if(!prev) {
+            slide_recent++;
+            if(slide_recent > MAX_RECENT)
+                slide_recent = 1;
+        }
+        else {
+            slide_recent--;
+            if(slide_recent < 1)
+                slide_recent = MAX_RECENT;
+        }
     }
     else {
-        slide--;
-        if(slide < 1)
-            slide = MAX_RECENT;
+        if(!prev) {
+            slide_popular++;
+            if(slide_popular > MAX_RECENT)
+                slide_popular = 1;
+        }
+        else {
+            slide_popular--;
+            if(slide_popular < 1)
+                slide_popular = MAX_RECENT;
+        }
     }
     
-    slides[slide - 1].style.display = 'block';
-    dots[slide - 1].className += ' active';
-    slide_timeout = setTimeout(showRecents, 2000);
+    if(type === 'recent') {
+        slides[slide_recent - 1].style.display = 'block';
+        dots[slide_recent - 1].className += ' active';
+        recent_timeout = setTimeout(() => {showAnimes(type)}, 2000);
+    }
+    else {
+        slides[slide_popular - 1].style.display = 'block';
+        dots[slide_popular - 1].className += ' active';
+        popular_timeout = setTimeout(() => {showAnimes(type)}, 2000);
+    }
 }
 
 
 addGenres(document.querySelector('#searchGenre'));
-searchRecent();
-showRecents();
+getCarouselData('recent');
+showAnimes('recent');
+getCarouselData('popular');
+showAnimes('popular');
 
 
 
