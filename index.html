@@ -5,90 +5,119 @@
     <title>Anime Theater</title>
 
     <link rel="stylesheet" href="https://valajr.github.io/BlueDog/import/style.css">
-    <link rel="stylesheet" href="import/style.css">
+    <link rel="stylesheet" href="static/style.css">
 
     <script defer src="static/main.js"></script>
     <script src="static/APICollector.js"></script>
 </head>
-<div>
-    <input type="search" id="searchName" class="bd-pattern" placeholder="Search by name">
-    <select name="search" id="searchGenre" class="bd-pattern"></select>
-    <button onclick="searchGenre()" class="bd-btn bd-pattern">Search</button>
-    <br>
-    <div class="anime-carousels">
-        <div class="carousel bd-pattern">
-            <span class="carousel-title">Recent Animes</span>
-            <div class="recent-carousel">
-                <div class="recent-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
+<body>
+    <header class="bd-header bd-pattern">
+        <div class="bd-header-content">
+            <img src="#" alt="-" class="bd-header-logo">
+            <div class="bd-header-navigator">
+                <button class="bd-btn bd-btn-transparent bd-btn-selected bd-header-item">Home</button>
+                <button class="bd-btn bd-btn-transparent bd-header-item">Animes</button>
+                <button class="bd-btn bd-btn-transparent bd-header-item">Movies</button>
+                <div class="bd-btn-group bd-header-item">
+                    <select name="search" id="searchGenre" class="bd-pattern">
+                        <option value="" disabled selected>Search by genre</option>
+                    </select>
+                    <button onclick="searchGenre()" class="bd-btn bd-btn-standard" style="padding: 10.4px;">Search</button>
                 </div>
-                <div class="recent-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
-                <div class="recent-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
-                <div class="recent-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
-                <div class="recent-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
+            </div>
+            <input type="search" id="searchName" class="bd-pattern bd-header-item" placeholder="Search by name">
+        </div>
+    </header>
+    <div class="container">
+        <div class="banner-carousel bd-pattern">
+            <div class="banner-anime hidden">
+                <span class="anime-name"></span>
+                <img src="#" alt="">
+                <span class="anime-synopsis"></span>
+            </div>
+            <div class="banner-anime hidden">
+                <span class="anime-name"></span>
+                <img src="#" alt="">
+                <span class="anime-synopsis"></span>
+            </div>
+            <div class="banner-anime hidden">
+                <span class="anime-name"></span>
+                <img src="#" alt="">
+                <span class="anime-synopsis"></span>
+            </div>
+            <div class="banner-anime hidden">
+                <span class="anime-name"></span>
+                <img src="#" alt="">
+                <span class="anime-synopsis"></span>
+            </div>
+            <div class="banner-anime hidden">
+                <span class="anime-name"></span>
+                <img src="#" alt="">
+                <span class="anime-synopsis"></span>
+            </div>
 
-                <a class="prev" onclick="prevSlide('recent')">&#10094;</a>
-                <a class="next" onclick="nextSlide('recent')">&#10095;</a>
-                
-                <div class="dot-line">
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
+            <a class="prev" onclick="prevSlide()">&#10094;</a>
+            <a class="next" onclick="nextSlide()">&#10095;</a>
+            <div class="dot-line">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
             </div>
         </div>
-        <div class="carousel bd-pattern">
-            <span class="carousel-title">Popular Animes</span>
-            <div class="popular-carousel">
-                <div class="popular-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
-                <div class="popular-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
-                <div class="popular-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
-                <div class="popular-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
-                <div class="popular-anime">
-                    <img src="#" alt="">
-                    <span class="anime-name"></span>
-                </div>
 
-                <a class="prev" onclick="prevSlide('popular')">&#10094;</a>
-                <a class="next" onclick="nextSlide('popular')">&#10095;</a>
-                
-                <div class="dot-line">
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
-            </div>
+        <div class="top-airing bd-pattern">
+            <span>Top Airing Anime</span>
+            <ul>
+                <li class="top-anime">
+                    <span class="top-rank">1</span>
+                    <img src="" alt="">
+                    <div class="top-data">
+                        <span class="top-title">test</span>
+                        <span class="top-episodes">test</span>
+                        <span class="top-status">test</span>
+                    </div>
+                </li>
+                <li class="top-anime">
+                    <span class="top-rank">2</span>
+                    <img src="" alt="">
+                    <div class="top-data">
+                        <span class="top-title">test</span>
+                        <span class="top-episodes">test</span>
+                        <span class="top-status">test</span>
+                    </div>
+                </li>
+                <li class="top-anime">
+                    <span class="top-rank">3</span>
+                    <img src="" alt="">
+                    <div class="top-data">
+                        <span class="top-title">test</span>
+                        <span class="top-episodes">test</span>
+                        <span class="top-status">test</span>
+                    </div>
+                </li>
+                <li class="top-anime">
+                    <span class="top-rank">4</span>
+                    <img src="" alt="">
+                    <div class="top-data">
+                        <span class="top-title">test</span>
+                        <span class="top-episodes">test</span>
+                        <span class="top-status">test</span>
+                    </div>
+                </li>
+                <li class="top-anime">
+                    <span class="top-rank">5</span>
+                    <img src="" alt="">
+                    <div class="top-data">
+                        <span class="top-title">test</span>
+                        <span class="top-episodes">test</span>
+                        <span class="top-status">test</span>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
-
+</body>
 </body>
 </html>

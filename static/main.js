@@ -17,7 +17,8 @@ const ANIME = {
     'title': 'animeTitle',
     'image': 'animeImg',
     'status': 'status',
-    'episodes': 'totalEpisodes'
+    'episodes': 'totalEpisodes',
+    'synopsis': 'synopsis'
 }
 
 const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
@@ -30,37 +31,23 @@ const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
             'thriller', 'vampire', 'yaoi', 'yuri'];
 
 const MAX_RECENT = 5;
-let recent_timeout = null;
-let slide_recent = 0;
-let popular_timeout = null;
-let slide_popular = 0;
+let banner_timeout = null;
+let slide_banner = 0;
 
-async function fetchAnime(type, key='') {
-    key.replace(/ /g,"-");
+async function fetchAnime(type, key='', img=false) {
+    if(!img) {
+        key = key.replace(/!|\?|:|\(|\)/g,"");
+        key = key.replace(/ - /g,"-");
+        key = key.replace(/ /g,"-");
+    }
+    else {
+        key = key.replace(/https:\/\/gogocdn.net\/cover\//g, '');
+        key = key.replace(/.png/g, '');
+    }
+
     let api_response = await fetch(API_LINK + type + key);
     let data = await api_response.json();
     return data;
-}
-
-async function searchGenre() {
-    let genre = document.querySelector('#searchGenre').value;
-    console.log(await fetchAnime(SEARCH.by_genre + genre))
-}
-
-async function getCarouselData(type) {
-    let anime_names = document.querySelectorAll(`.${type}-anime > .anime-name`);
-    let anime_slides = document.querySelectorAll(`.${type}-anime > img`);
-
-    let animes = [];
-    if(type === 'recent')
-        animes = await fetchAnime(SEARCH.recent);
-    else
-        animes = await fetchAnime(SEARCH.popular);
-
-    for(let i=0; i<MAX_RECENT; i++) {
-        anime_names[i].innerHTML = animes[i][ANIME.title];
-        anime_slides[i].src = animes[i][ANIME.image];
-    }
 }
 
 function addGenres(select) {
@@ -68,88 +55,79 @@ function addGenres(select) {
         select.innerHTML += `<option value="${GENRE[i]}">${GENRE[i]}</option>`;
 }
 
-function nextSlide(type) {
-    if(type === 'recent')
-        clearTimeout(recent_timeout);
-    else
-        clearTimeout(popular_timeout);
-
-    showAnimes(type);
+async function searchGenre() {
+    let genre = document.querySelector('#searchGenre').value;
+    console.log(await fetchAnime(SEARCH.by_genre + genre))
 }
-
-function prevSlide(type) {
-    if(type === 'recent')
-        clearTimeout(recent_timeout);
-    else
-        clearTimeout(popular_timeout);
-
-    let prev = true;
-    showAnimes(type, prev);
-}
-
-function showAnimes(type, prev=false) {
-    let slides = document.querySelectorAll(`.${type}-anime`);
-    let dots = document.querySelectorAll(`.${type}-carousel > .dot-line > .dot`);
-    let i;
-
-    for(i=0; i<MAX_RECENT; i++)
-        slides[i].style.display = 'none';
-    for(i=0; i<MAX_RECENT; i++)
-        dots[i].className = dots[i].className.replace(' active', '');
-
-    if(type === 'recent') {
-        if(!prev) {
-            slide_recent++;
-            if(slide_recent > MAX_RECENT)
-                slide_recent = 1;
-        }
-        else {
-            slide_recent--;
-            if(slide_recent < 1)
-                slide_recent = MAX_RECENT;
-        }
-    }
-    else {
-        if(!prev) {
-            slide_popular++;
-            if(slide_popular > MAX_RECENT)
-                slide_popular = 1;
-        }
-        else {
-            slide_popular--;
-            if(slide_popular < 1)
-                slide_popular = MAX_RECENT;
-        }
-    }
-    
-    if(type === 'recent') {
-        slides[slide_recent - 1].style.display = 'block';
-        dots[slide_recent - 1].className += ' active';
-        recent_timeout = setTimeout(() => {showAnimes(type)}, 2000);
-    }
-    else {
-        slides[slide_popular - 1].style.display = 'block';
-        dots[slide_popular - 1].className += ' active';
-        popular_timeout = setTimeout(() => {showAnimes(type)}, 2000);
-    }
-}
-
-
-addGenres(document.querySelector('#searchGenre'));
-getCarouselData('recent');
-showAnimes('recent');
-getCarouselData('popular');
-showAnimes('popular');
-
-
-
-
 
 let search = document.querySelector('#searchName');
-
 search.addEventListener("keypress", async function(event) {
     if (event.key === "Enter") {
         if(search.value !== '')
             console.log(await fetchAnime(SEARCH.by_name, search.value));
     }
 });
+
+function nextSlide() {
+    clearTimeout(banner_timeout);
+    showCarousel();
+}
+
+function prevSlide() {
+    clearTimeout(banner_timeout);
+    let prev = true;
+    showCarousel(prev);
+}
+
+async function getBannerData() {
+    let animes = await fetchAnime(SEARCH.recent);
+    let anime_names = document.querySelectorAll('.anime-name');
+    let anime_imgs = document.querySelectorAll('.banner-anime > img');
+    let anime_synopses = document.querySelectorAll('.anime-synopsis');
+
+
+    for(let i=0; i<MAX_RECENT; i++) {
+        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_imgs[i].src = animes[i][ANIME.image];
+        anime_imgs[i].alt = animes[i][ANIME.title];
+        let anime_detail = await fetchAnime(SEARCH.anime_details, animes[i][ANIME.title]);
+        if(anime_detail.error)
+            anime_detail = await fetchAnime(SEARCH.anime_details, anime_imgs[i].src, true);
+        if(anime_detail.length > 1)
+            anime_detail = anime_detail[0];
+        anime_synopses[i].innerHTML = anime_detail[ANIME.synopsis];
+    }
+}
+
+function showCarousel(prev=false) {
+    let slides = document.querySelectorAll('.banner-anime');
+    let dots = document.querySelectorAll('.banner-carousel > .dot-line > .dot');
+    let i;
+
+    for(i=0; i<MAX_RECENT; i++) {
+        slides[i].classList.add('hidden');
+        slides[i].classList.remove('show');
+    }
+    for(i=0; i<MAX_RECENT; i++)
+        dots[i].className = dots[i].className.replace(' active', '');
+
+    if(!prev) {
+        slide_banner++;
+        if(slide_banner > MAX_RECENT)
+            slide_banner = 1;
+    }
+    else {
+        slide_banner--;
+        if(slide_banner < 1)
+            slide_banner = MAX_RECENT;
+    }
+    slides[slide_banner - 1].classList.remove('hidden');
+    slides[slide_banner - 1].classList.add('show');
+    dots[slide_banner - 1].className += ' active';
+    banner_timeout = setTimeout(() => {showCarousel()}, 5000);
+}
+
+addGenres(document.querySelector('#searchGenre'));
+
+getBannerData();
+showCarousel();
