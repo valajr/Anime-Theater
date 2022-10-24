@@ -120,7 +120,6 @@
     height: 190px;
     left: 210px;
     padding: 20px;
-    white-space: pre-line;
     overflow-y: overlay;
     z-index: 1;
 }

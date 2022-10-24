@@ -1,35 +1,35 @@
-const API_LINK = 'https://gogoanime.herokuapp.com/';
+const API_LINK = 'https://api.consumet.org/meta/anilist/';
 
 const SEARCH = {
-    'by_name': 'search?keyw=',
-    'by_genre': 'genre/',
-    'anime_details': 'anime-details/',
-    'recent': 'recent-release',
+    'by_name': '',
+    'recent': 'recent-episodes?provider=zoro&page=1&perPage=25',
+    'recent_2': 'recent-episodes?provider=gogoanime',
+    'advanced': 'advanced-search/',
+    'by_genre': 'genre?genres=',
+    'random': 'random-anime',
+    'trending': 'trending',
     'popular': 'popular',
-    'top_airing': 'top-airing',
-    'movies': 'anime-movies',
-    'stream_01': 'vidcdn/watch/',
-    'stream_02': 'streamsb/watch/',
-    'thread': 'thread/'
+    'info': 'info/',
+    'stream': 'watch/',
+    'movies': 'advanced-search?format=MOVIE',
+    'season': 'advanced-search?season=',
+    'year': '2022'
 }
 
 const ANIME = {
-    'title': 'animeTitle',
-    'image': 'animeImg',
+    'title': 'title',
+    'rom': 'romaji',
+    'eng': 'english',
+    'nat': 'native',
+    'image': 'image',
     'status': 'status',
     'episodes': 'totalEpisodes',
-    'last_ep': 'latestEp',
-    'synopsis': 'synopsis'
+    'synopsis': 'description'
 }
 
-const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
-            'demons', 'drama', 'dub', 'ecchi', 'family', 'fantasy', 'game',
-            'gourmet', 'harem', 'historical', 'horror', 'josei', 'kids', 'magic',
-            'martial-arts', 'mecha', 'military', 'mystery', 'parody', 'police',
-            'psychological', 'romance', 'samurai', 'school', 'sci-fi', 'seinen',
-            'shoujo', 'shoujo-ai', 'shounen', 'shounen-ai', 'slice-of-Life',
-            'space', 'sports', 'super-power', 'supernatural', 'suspense',
-            'thriller', 'vampire', 'yaoi', 'yuri'];
+const GENRE = ["Action", "Adventure", "Cars", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", 
+            "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", 
+            "Supernatural", "Thriller"];
 
 const MAX_ANIME = 5;
 const MAX_ANIME_API = 10;
@@ -79,7 +79,7 @@ function createBanner() {
 function createTopList() {
     let top = document.querySelector('.top-list');
 
-    let top_title = createElementHTML('span', 'top-title', 'Top Airing Anime');
+    let top_title = createElementHTML('span', 'top-title', 'Trending Anime');
     top.appendChild(top_title);
     let list = createElementHTML('ul');
     for(let i=0; i<MAX_ANIME; i++) {
@@ -176,12 +176,10 @@ async function getBannerData() {
 
 
     for(let i=0; i<MAX_ANIME; i++) {
-        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
         anime_imgs[i].src = animes[i][ANIME.image];
-        anime_imgs[i].alt = animes[i][ANIME.title];
-        let anime_detail = await fetchAnime(SEARCH.anime_details, animes[i][ANIME.title]);
-        if(anime_detail.error)
-            anime_detail = await fetchAnime(SEARCH.anime_details, anime_imgs[i].src, true);
+        anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
+        let anime_detail = await fetchAnime(SEARCH.by_name, animes[i][ANIME.title][ANIME.rom]);
         if(anime_detail.length > 1)
             anime_detail = anime_detail[0];
         anime_synopses[i].innerHTML = anime_detail[ANIME.synopsis];
@@ -216,17 +214,17 @@ function showCarousel(prev=false) {
 }
 
 async function getTopListData() {
-    let animes = await fetchAnime(SEARCH.top_airing);
+    let animes = await fetchAnime(SEARCH.trending);
     let anime_imgs = document.querySelectorAll('.top-img');
     let anime_names = document.querySelectorAll('.top-name');
     let anime_episodes = document.querySelectorAll('.top-episodes');
 
 
     for(let i=0; i<MAX_ANIME; i++) {
-        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
         anime_imgs[i].src = animes[i][ANIME.image];
-        anime_imgs[i].alt = animes[i][ANIME.title];
-        anime_episodes[i].innerHTML = animes[i][ANIME.last_ep];
+        anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
+        anime_episodes[i].innerHTML = animes[i][ANIME.episodes];
     }
 }
 
@@ -237,22 +235,25 @@ async function getMovieListData() {
 
 
     for(let i=0; i<MAX_ANIME; i++) {
-        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
         anime_imgs[i].src = animes[i][ANIME.image];
-        anime_imgs[i].alt = animes[i][ANIME.title];
+        anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
     }
 }
 
 async function getRecentData() {
     let animes = await fetchAnime(SEARCH.recent);
+    if(animes.statusCode) {
+        animes = await fetchAnime(SEARCH.recent_2);
+    }
     let anime_imgs = document.querySelectorAll('.recent-img');
     let anime_names = document.querySelectorAll('.recent-name');
 
 
     for(let i=0; i<MAX_ANIME_API; i++) {
-        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
         anime_imgs[i].src = animes[i][ANIME.image];
-        anime_imgs[i].alt = animes[i][ANIME.title];
+        anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
     }
 }
 
