@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="static/style.css">
 
     <script defer src="static/main.js"></script>
-    <script src="static/APICollector.js"></script>
+    <script src="import/APICollector.js"></script>
 </head>
 <body>
     <header class="bd-header bd-pattern">
@@ -29,93 +29,12 @@
         </div>
     </header>
     <div class="container">
-        <div class="banner-carousel bd-pattern">
-            <div class="banner-anime hidden">
-                <span class="anime-name"></span>
-                <img src="#" alt="">
-                <span class="anime-synopsis"></span>
-            </div>
-            <div class="banner-anime hidden">
-                <span class="anime-name"></span>
-                <img src="#" alt="">
-                <span class="anime-synopsis"></span>
-            </div>
-            <div class="banner-anime hidden">
-                <span class="anime-name"></span>
-                <img src="#" alt="">
-                <span class="anime-synopsis"></span>
-            </div>
-            <div class="banner-anime hidden">
-                <span class="anime-name"></span>
-                <img src="#" alt="">
-                <span class="anime-synopsis"></span>
-            </div>
-            <div class="banner-anime hidden">
-                <span class="anime-name"></span>
-                <img src="#" alt="">
-                <span class="anime-synopsis"></span>
-            </div>
-
-            <a class="prev" onclick="prevSlide()">&#10094;</a>
-            <a class="next" onclick="nextSlide()">&#10095;</a>
-            <div class="dot-line">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
+        <div class="left-side">
+            <div class="banner-carousel bd-pattern"></div>
+            <div class="recent-animes bd-pattern"></div>
         </div>
-
-        <div class="top-airing bd-pattern">
-            <span>Top Airing Anime</span>
-            <ul>
-                <li class="top-anime">
-                    <span class="top-rank">1</span>
-                    <img src="" alt="">
-                    <div class="top-data">
-                        <span class="top-title">test</span>
-                        <span class="top-episodes">test</span>
-                        <span class="top-status">test</span>
-                    </div>
-                </li>
-                <li class="top-anime">
-                    <span class="top-rank">2</span>
-                    <img src="" alt="">
-                    <div class="top-data">
-                        <span class="top-title">test</span>
-                        <span class="top-episodes">test</span>
-                        <span class="top-status">test</span>
-                    </div>
-                </li>
-                <li class="top-anime">
-                    <span class="top-rank">3</span>
-                    <img src="" alt="">
-                    <div class="top-data">
-                        <span class="top-title">test</span>
-                        <span class="top-episodes">test</span>
-                        <span class="top-status">test</span>
-                    </div>
-                </li>
-                <li class="top-anime">
-                    <span class="top-rank">4</span>
-                    <img src="" alt="">
-                    <div class="top-data">
-                        <span class="top-title">test</span>
-                        <span class="top-episodes">test</span>
-                        <span class="top-status">test</span>
-                    </div>
-                </li>
-                <li class="top-anime">
-                    <span class="top-rank">5</span>
-                    <img src="" alt="">
-                    <div class="top-data">
-                        <span class="top-title">test</span>
-                        <span class="top-episodes">test</span>
-                        <span class="top-status">test</span>
-                    </div>
-                </li>
-            </ul>
+        <div class="right-side">
+            <div class="top-airing bd-pattern"></div>
         </div>
     </div>
 </body>

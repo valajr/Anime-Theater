@@ -18,6 +18,7 @@ const ANIME = {
     'image': 'animeImg',
     'status': 'status',
     'episodes': 'totalEpisodes',
+    'last_ep': 'latestEp',
     'synopsis': 'synopsis'
 }
 
@@ -30,24 +31,113 @@ const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
             'space', 'sports', 'super-power', 'supernatural', 'suspense',
             'thriller', 'vampire', 'yaoi', 'yuri'];
 
-const MAX_RECENT = 5;
+const MAX_ANIME = 5;
+const MAX_ANIME_API = 20;
 let banner_timeout = null;
 let slide_banner = 0;
 
-async function fetchAnime(type, key='', img=false) {
-    if(!img) {
-        key = key.replace(/!|\?|:|\(|\)/g,"");
-        key = key.replace(/ - /g,"-");
-        key = key.replace(/ /g,"-");
-    }
-    else {
-        key = key.replace(/https:\/\/gogocdn.net\/cover\//g, '');
-        key = key.replace(/.png/g, '');
-    }
+function createElementHTML(tag, cl='dynamic', text='', action='') {
+    let element = document.createElement(tag);
+    
+    element.classList.add(cl);
+    element.innerHTML = text;
+    element.onclick = action;
 
-    let api_response = await fetch(API_LINK + type + key);
-    let data = await api_response.json();
-    return data;
+    return element;
+}
+
+function createBanner() {
+    let carousel = document.querySelector('.banner-carousel');
+    for(let i=0; i<MAX_ANIME; i++) {
+        let banner = createElementHTML('div', 'banner-anime');
+        let name = createElementHTML('span', 'anime-name', '', () => {toAnimePage(i, 'banner')});
+        let img = createElementHTML('img', 'anime-img', '', () => {toAnimePage(i, 'banner')});
+        img.src = '#';
+        let synopsis = createElementHTML('span', 'anime-synopsis');
+
+        banner.appendChild(name);
+        banner.appendChild(img);
+        banner.appendChild(synopsis);
+        carousel.appendChild(banner);
+    }
+    let prev = createElementHTML('a', 'prev', '&#10094;', prevSlide);
+    let next = createElementHTML('a', 'next', '&#10095;', nextSlide)
+
+    carousel.appendChild(prev);
+    carousel.appendChild(next);
+
+    let dot_line = createElementHTML('div', 'dot-line');
+    for(let d=0; d<MAX_ANIME; d++) {
+        let dot = createElementHTML('span', 'dot', '', () => {toBanner(d)});
+        dot_line.appendChild(dot);
+    }
+    carousel.appendChild(dot_line);
+    showCarousel();
+    getBannerData();
+}
+
+function createTopAiring() {
+    let top = document.querySelector('.top-airing');
+
+    let top_title = createElementHTML('span', 'top-list', 'Top Airing Anime');
+    top.appendChild(top_title);
+    let list = createElementHTML('ul');
+    for(let i=0; i<MAX_ANIME; i++) {
+        let item = createElementHTML('li', 'top-anime');
+        let rank = createElementHTML('span', 'top-rank', i+1);
+        let img = createElementHTML('img', 'top-img', '', () => {toAnimePage(i, 'top')});
+        let data = createElementHTML('div', 'top-data', '', () => {toAnimePage(i, 'top')});
+        let title = createElementHTML('span', 'top-title');
+        let episodes = createElementHTML('span', 'top-episodes');
+
+        item.appendChild(rank);
+        item.appendChild(img);
+        data.appendChild(title);
+        data.appendChild(episodes);
+        item.appendChild(data);
+        list.appendChild(item);
+        if(i+1 != MAX_ANIME) {
+            let hr = createElementHTML('hr', 'bd-hr');
+            list.appendChild(hr);
+        }
+    }
+    top.appendChild(list);
+    getTopAiringData();
+}
+
+function createRecentAnimes() {
+    let recent = document.querySelector('.recent-animes');
+
+    for(let i=0; i<MAX_ANIME_API; i++) {
+        let anime = createElementHTML('div', 'recent-anime');
+        let img = createElementHTML('img', 'recent-img');
+        let name = createElementHTML('span', 'recent-name');
+        anime.appendChild(img);
+        anime.appendChild(name);
+        recent.appendChild(anime);
+        if(i+1 != MAX_ANIME_API) {
+            let hr = createElementHTML('hr', 'bd-hr');
+            recent.appendChild(hr);
+        }
+    }
+    getRecentData();
+}
+
+function prevSlide() {
+    clearTimeout(banner_timeout);
+    let prev = true;
+    showCarousel(prev);
+}
+
+function nextSlide() {
+    clearTimeout(banner_timeout);
+    showCarousel();
+}
+
+function toBanner(id) {
+    slide_banner = id;
+    clearTimeout(banner_timeout);
+    showCarousel();
 }
 
 function addGenres(select) {
@@ -68,25 +158,14 @@ search.addEventListener("keypress", async function(event) {
     }
 });
 
-function nextSlide() {
-    clearTimeout(banner_timeout);
-    showCarousel();
-}
-
-function prevSlide() {
-    clearTimeout(banner_timeout);
-    let prev = true;
-    showCarousel(prev);
-}
-
 async function getBannerData() {
-    let animes = await fetchAnime(SEARCH.recent);
+    let animes = await fetchAnime(SEARCH.popular);
     let anime_names = document.querySelectorAll('.anime-name');
-    let anime_imgs = document.querySelectorAll('.banner-anime > img');
+    let anime_imgs = document.querySelectorAll('.anime-img');
     let anime_synopses = document.querySelectorAll('.anime-synopsis');
 
 
-    for(let i=0; i<MAX_RECENT; i++) {
+    for(let i=0; i<MAX_ANIME; i++) {
         anime_names[i].innerHTML = animes[i][ANIME.title];
         anime_imgs[i].src = animes[i][ANIME.image];
         anime_imgs[i].alt = animes[i][ANIME.title];
@@ -104,22 +183,21 @@ function showCarousel(prev=false) {
     let dots = document.querySelectorAll('.banner-carousel > .dot-line > .dot');
     let i;
 
-    for(i=0; i<MAX_RECENT; i++) {
+    for(i=0; i<MAX_ANIME; i++) {
         slides[i].classList.add('hidden');
         slides[i].classList.remove('show');
-    }
-    for(i=0; i<MAX_RECENT; i++)
         dots[i].className = dots[i].className.replace(' active', '');
+    }
 
     if(!prev) {
         slide_banner++;
-        if(slide_banner > MAX_RECENT)
+        if(slide_banner > MAX_ANIME)
             slide_banner = 1;
     }
     else {
         slide_banner--;
         if(slide_banner < 1)
-            slide_banner = MAX_RECENT;
+            slide_banner = MAX_ANIME;
     }
     slides[slide_banner - 1].classList.remove('hidden');
     slides[slide_banner - 1].classList.add('show');
@@ -127,7 +205,51 @@ function showCarousel(prev=false) {
     banner_timeout = setTimeout(() => {showCarousel()}, 5000);
 }
 
-addGenres(document.querySelector('#searchGenre'));
+async function getTopAiringData() {
+    let animes = await fetchAnime(SEARCH.top_airing);
+    let anime_imgs = document.querySelectorAll('.top-img');
+    let anime_names = document.querySelectorAll('.top-title');
+    let anime_episodes = document.querySelectorAll('.top-episodes');
 
-getBannerData();
-showCarousel();
+
+    for(let i=0; i<MAX_ANIME; i++) {
+        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_imgs[i].src = animes[i][ANIME.image];
+        anime_imgs[i].alt = animes[i][ANIME.title];
+        anime_episodes[i].innerHTML = animes[i][ANIME.last_ep];
+    }
+}
+
+function toAnimePage(id, type) {
+    let anime_name;
+    switch(type) {
+        case 'banner':
+            anime_name = document.querySelectorAll('.anime-name');
+            anime_name = anime_name[id].innerHTML;
+            console.log(anime_name);
+            break;
+        case 'top':
+            anime_name = document.querySelectorAll('.top-title');
+            anime_name = anime_name[id].innerHTML;
+            console.log(anime_name);
+            break;
+    }
+}
+
+async function getRecentData() {
+    let animes = await fetchAnime(SEARCH.recent);
+    let anime_imgs = document.querySelectorAll('.recent-img');
+    let anime_names = document.querySelectorAll('.recent-name');
+
+
+    for(let i=0; i<MAX_ANIME_API; i++) {
+        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_imgs[i].src = animes[i][ANIME.image];
+        anime_imgs[i].alt = animes[i][ANIME.title];
+    }
+}
+
+createBanner();
+createTopAiring();
+createRecentAnimes();
+addGenres(document.querySelector('#searchGenre'));

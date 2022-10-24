@@ -31,6 +31,12 @@
     font-size: 14px;
 }
 
+.bd-hr {
+    margin: 0 20px 10px 20px;
+    padding: 0;
+    width: calc(100% - 40px);
+}
+
 * {
     box-sizing: border-box;
     margin: 0 auto;
@@ -42,11 +48,23 @@
     align-items: flex-start;
 }
 
+.left-side {
+    margin: 10px 10px 10px 12%;
+    width: calc(50% - 10px);
+    padding: 0;
+}
+
+.right-side {
+    width: 26%;
+    margin: 10px 12% 10px 0;
+    padding: 0;
+}
+
 .banner-carousel {
     position: relative;
-    margin: 10px 0 10px 12%;
-    width: 50%;
+    width: 100%;
     left: 0;
+    margin: 0;
     z-index: 0;
     overflow: hidden;
 }
@@ -69,7 +87,7 @@
     overflow: hidden;
 }
 
-.banner-anime > img {
+.anime-img {
     width: 200px;
     height: 280px;
     position: absolute;
@@ -100,7 +118,7 @@
     text-align: end;
     vertical-align: center;
     background-color: white;
-    white-space: 0;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -113,13 +131,18 @@
 }
 
 .dot {
-    height: 10px;
-    width: 10px;
+    height: 12px;
+    width: 12px;
+    margin: 0 3px;
     background-color: var(--primary-medium-light);
     border-radius: 50%;
     display: inline-block;
     transition: background-color 0.6s ease;
     vertical-align: middle;
+}
+
+.anime-name:hover, .anime-img:hover, .dot:hover {
+    cursor: pointer;
 }
 
 .active {
@@ -149,26 +172,28 @@
 }
   
 .prev:hover, .next:hover {
-    background-color: var(--primary-medium);
+    background-color: var(--primary-medium-light);
     color: var(--primary-medium-dark);
 }
 
 .top-airing {
-    width: 26%;
-    margin: 10px 12% 10px 10px;
-    padding: 0;
+    width: 100%;
+    padding: 0; 
+    margin: 0;
     display: flex;
     flex-direction: column;
 }
 
-.top-airing > span {
+.top-list {
     width: 100%;
     font-size: 18px;
     text-align: center;
     padding: 10px;
     margin-bottom: 10px;
-    background-color: var(--primary-medium-light);
+    background-color: white;
     border-radius: 10px 10px 0 0;
+    color: var(--primary-medium-dark);
+    font-weight: bold;
 }
 
 .top-airing > ul {
@@ -182,39 +207,67 @@
     padding-bottom: 10px;
 }
 
-.top-anime > span {
-    font-size: 15px;
-    padding: 27.5px 20px 27.5px 20px;
+.top-rank {
+    font-size: 20px;
+    padding: 25px 20px 25px 20px;
     margin: 0;
 }
 
-.top-anime > img {
+.top-img {
     width: 50px;
     height: 70px;
 }
 
 .top-data {
-    width: 100%;
+    width: 60%;
     display: flex;
     flex-direction: column;
 }
 
-.top-data > span {
-    width: 100%;
-    font-size: 15px;
-    margin: 0;
-}
-
 .top-title {
+    display: block;
+    width: calc(100% - 10px);
+    height: 30px;
+    font-size: 16px;
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
     padding: 0 0 10px 10px;
 }
 
 .top-episodes {
+    width: 100%;
+    text-align: start;
     padding: 0 0 10px 10px;
 }
 
-.top-status {
-    padding-left: 10px;
+.top-data:hover, .top-img:hover {
+    cursor: pointer;
+    background-color: var(--primary-medium-dark);
+}
+
+.recent-animes {
+    margin: 0;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.recent-anime:hover {
+    cursor: pointer;
+    background-color: var(--primary-medium-dark);
+}
+
+.recent-img {
+    width: 100px;
+    height: 140px;
+}
+
+.recent-name {
+    width: calc(100% - 100px);
+    vertical-align: top;
+    font-size: 16px;
+    padding: 10px;
 }
 
 @media only screen and (max-width: 1100px) {
@@ -222,8 +275,17 @@
         padding: 0 8%;
     }
     
-    .banner-carousel {
-        margin: 10px 8%;
+    /* .left-side {
+        margin: 10px 0 0 8%;
+    }
+
+    .right-side {
+        margin: 10px 8% 0 0;
+    } */
+
+
+    .top-airing {
+        width: 100%;
     }
 
     .anime-name {
