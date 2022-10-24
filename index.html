@@ -18,12 +18,6 @@
                 <button class="bd-btn bd-btn-transparent bd-btn-selected bd-header-item">Home</button>
                 <button class="bd-btn bd-btn-transparent bd-header-item">Animes</button>
                 <button class="bd-btn bd-btn-transparent bd-header-item">Movies</button>
-                <div class="bd-btn-group bd-header-item">
-                    <select name="search" id="searchGenre" class="bd-pattern">
-                        <option value="" disabled selected>Search by genre</option>
-                    </select>
-                    <button onclick="searchGenre()" class="bd-btn bd-btn-standard" style="padding: 10.4px;">Search</button>
-                </div>
             </div>
             <input type="search" id="searchName" class="bd-pattern bd-header-item" placeholder="Search by name">
         </div>
@@ -31,10 +25,11 @@
     <div class="container">
         <div class="left-side">
             <div class="banner-carousel bd-pattern"></div>
-            <div class="recent-animes bd-pattern"></div>
+            <div class="recent-animes"></div>
         </div>
         <div class="right-side">
-            <div class="top-airing bd-pattern"></div>
+            <div class="top-list bd-pattern"></div>
+            <div class="movie-list bd-pattern"></div>
         </div>
     </div>
 </body>

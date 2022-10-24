@@ -32,7 +32,7 @@ const GENRE = ['action', 'adventure', 'cars', 'comedy', 'crime', 'dementia',
             'thriller', 'vampire', 'yaoi', 'yuri'];
 
 const MAX_ANIME = 5;
-const MAX_ANIME_API = 20;
+const MAX_ANIME_API = 10;
 let banner_timeout = null;
 let slide_banner = 0;
 
@@ -76,18 +76,18 @@ function createBanner() {
     getBannerData();
 }
 
-function createTopAiring() {
-    let top = document.querySelector('.top-airing');
+function createTopList() {
+    let top = document.querySelector('.top-list');
 
-    let top_title = createElementHTML('span', 'top-list', 'Top Airing Anime');
+    let top_title = createElementHTML('span', 'top-title', 'Top Airing Anime');
     top.appendChild(top_title);
     let list = createElementHTML('ul');
     for(let i=0; i<MAX_ANIME; i++) {
-        let item = createElementHTML('li', 'top-anime');
+        let item = createElementHTML('li', 'top-anime', '', () => {toAnimePage(i, 'top')});
         let rank = createElementHTML('span', 'top-rank', i+1);
-        let img = createElementHTML('img', 'top-img', '', () => {toAnimePage(i, 'top')});
-        let data = createElementHTML('div', 'top-data', '', () => {toAnimePage(i, 'top')});
-        let title = createElementHTML('span', 'top-title');
+        let img = createElementHTML('img', 'top-img');
+        let data = createElementHTML('div', 'top-data');
+        let title = createElementHTML('span', 'top-name');
         let episodes = createElementHTML('span', 'top-episodes');
 
         item.appendChild(rank);
@@ -96,29 +96,49 @@ function createTopAiring() {
         data.appendChild(episodes);
         item.appendChild(data);
         list.appendChild(item);
-        if(i+1 != MAX_ANIME) {
-            let hr = createElementHTML('hr', 'bd-hr');
-            list.appendChild(hr);
-        }
+        let hr = createElementHTML('hr', 'bd-hr');
+        list.appendChild(hr);
     }
     top.appendChild(list);
-    getTopAiringData();
+    getTopListData();
+}
+
+function createMovieList() {
+    let movies = document.querySelector('.movie-list');
+
+    let movie_title = createElementHTML('span', 'movie-title', 'Anime Movies');
+    movies.appendChild(movie_title);
+    let list = createElementHTML('ul');
+    for(let i=0; i<MAX_ANIME; i++) {
+        let item = createElementHTML('li', 'movie-anime', '', () => {toAnimePage(i, 'movie')});
+        let rank = createElementHTML('span', 'movie-rank', i+1);
+        let img = createElementHTML('img', 'movie-img');
+        let data = createElementHTML('div', 'movie-data');
+        let title = createElementHTML('span', 'movie-name');
+
+        item.appendChild(rank);
+        item.appendChild(img);
+        data.appendChild(title);
+        item.appendChild(data);
+        list.appendChild(item);
+        let hr = createElementHTML('hr', 'bd-hr');
+        list.appendChild(hr);
+    }
+    movies.appendChild(list);
+    getMovieListData();
 }
 
 function createRecentAnimes() {
     let recent = document.querySelector('.recent-animes');
 
     for(let i=0; i<MAX_ANIME_API; i++) {
-        let anime = createElementHTML('div', 'recent-anime');
+        let anime = createElementHTML('div', 'recent-anime', '', () => {toAnimePage(i, 'recent')});
         let img = createElementHTML('img', 'recent-img');
         let name = createElementHTML('span', 'recent-name');
         anime.appendChild(img);
         anime.appendChild(name);
+        anime.classList.add('bd-pattern');
         recent.appendChild(anime);
-        if(i+1 != MAX_ANIME_API) {
-            let hr = createElementHTML('hr', 'bd-hr');
-            recent.appendChild(hr);
-        }
     }
     getRecentData();
 }
@@ -138,16 +158,6 @@ function toBanner(id) {
     slide_banner = id;
     clearTimeout(banner_timeout);
     showCarousel();
-}
-
-function addGenres(select) {
-    for(i=0; i<GENRE.length; i++)
-        select.innerHTML += `<option value="${GENRE[i]}">${GENRE[i]}</option>`;
-}
-
-async function searchGenre() {
-    let genre = document.querySelector('#searchGenre').value;
-    console.log(await fetchAnime(SEARCH.by_genre + genre))
 }
 
 let search = document.querySelector('#searchName');
@@ -205,10 +215,10 @@ function showCarousel(prev=false) {
     banner_timeout = setTimeout(() => {showCarousel()}, 5000);
 }
 
-async function getTopAiringData() {
+async function getTopListData() {
     let animes = await fetchAnime(SEARCH.top_airing);
     let anime_imgs = document.querySelectorAll('.top-img');
-    let anime_names = document.querySelectorAll('.top-title');
+    let anime_names = document.querySelectorAll('.top-name');
     let anime_episodes = document.querySelectorAll('.top-episodes');
 
 
@@ -220,19 +230,16 @@ async function getTopAiringData() {
     }
 }
 
-function toAnimePage(id, type) {
-    let anime_name;
-    switch(type) {
-        case 'banner':
-            anime_name = document.querySelectorAll('.anime-name');
-            anime_name = anime_name[id].innerHTML;
-            console.log(anime_name);
-            break;
-        case 'top':
-            anime_name = document.querySelectorAll('.top-title');
-            anime_name = anime_name[id].innerHTML;
-            console.log(anime_name);
-            break;
+async function getMovieListData() {
+    let animes = await fetchAnime(SEARCH.movies);
+    let anime_imgs = document.querySelectorAll('.movie-img');
+    let anime_names = document.querySelectorAll('.movie-name');
+
+
+    for(let i=0; i<MAX_ANIME; i++) {
+        anime_names[i].innerHTML = animes[i][ANIME.title];
+        anime_imgs[i].src = animes[i][ANIME.image];
+        anime_imgs[i].alt = animes[i][ANIME.title];
     }
 }
 
@@ -249,7 +256,26 @@ async function getRecentData() {
     }
 }
 
+function toAnimePage(id, type) {
+    let anime_name;
+    switch(type) {
+        case 'banner':
+            anime_name = document.querySelectorAll('.anime-name');
+            break;
+        case 'top':
+            anime_name = document.querySelectorAll('.top-name');
+            break;
+        case 'movie':
+            anime_name = document.querySelectorAll('.movie-name');
+            break;
+        case 'recent':
+            anime_name = document.querySelectorAll('.recent-name');
+    }
+    anime_name = anime_name[id].innerHTML;
+    console.log(anime_name);
+}
+
 createBanner();
-createTopAiring();
+createTopList();
 createRecentAnimes();
-addGenres(document.querySelector('#searchGenre'));
+createMovieList();
