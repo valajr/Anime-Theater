@@ -331,18 +331,20 @@
     text-align: center;
 }
 
-@media only screen and (max-width: 1100px) {
+@media screen and (max-width: 1100px) {
     .bd-header {
         padding: 0 8%;
     }
     
-    /* .left-side {
-        margin: 10px 0 0 8%;
+    .left-side {
+        margin: 10px 10px 10px 8%;
+        width: calc(60% - 10px);
     }
 
     .right-side {
         margin: 10px 8% 0 0;
-    } */
+        width: 24%;
+    }
 
     .recent-animes {
         grid-template-columns: 1fr 1fr;
@@ -354,5 +356,11 @@
 
     .anime-name {
         font-size: 15px
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .recent-animes {
+        grid-template-columns: 1fr;
     }
 }
