@@ -13,7 +13,7 @@ const SEARCH = {
     'stream': 'watch/',
     'movies': 'advanced-search?format=MOVIE',
     'season': 'advanced-search?season=',
-    'year': '2022'
+    'year': '&year='
 }
 
 const ANIME = {
@@ -24,12 +24,15 @@ const ANIME = {
     'image': 'image',
     'status': 'status',
     'episodes': 'totalEpisodes',
-    'synopsis': 'description'
+    'synopsis': 'description',
+    'genres': 'genres'
 }
 
 const GENRE = ["Action", "Adventure", "Cars", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", 
             "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", 
             "Supernatural", "Thriller"];
+
+const SEASON = ['WINTER', 'SPRING', 'SUMMER', 'FALL'];
 
 const MAX_ANIME = 5;
 const MAX_ANIME_API = 10;
@@ -45,6 +48,14 @@ function createElementHTML(tag, cl='dynamic', text='', action='') {
 
     return element;
 }
+
+let search = document.querySelector('#searchName');
+search.addEventListener("keypress", async function(event) {
+    if (event.key === "Enter") {
+        if(search.value !== '')
+            toSearchPage(SEARCH.by_name, search.value);
+    }
+});
 
 function createBanner() {
     let carousel = document.querySelector('.banner-carousel');
@@ -115,10 +126,12 @@ function createMovieList() {
         let img = createElementHTML('img', 'movie-img');
         let data = createElementHTML('div', 'movie-data');
         let title = createElementHTML('span', 'movie-name');
+        let genres = createElementHTML('span', 'movie-genres');
 
         item.appendChild(rank);
         item.appendChild(img);
         data.appendChild(title);
+        data.appendChild(genres);
         item.appendChild(data);
         list.appendChild(item);
         let hr = createElementHTML('hr', 'bd-hr');
@@ -159,14 +172,6 @@ function toBanner(id) {
     clearTimeout(banner_timeout);
     showCarousel();
 }
-
-let search = document.querySelector('#searchName');
-search.addEventListener("keypress", async function(event) {
-    if (event.key === "Enter") {
-        if(search.value !== '')
-            console.log(await fetchAnime(SEARCH.by_name, search.value));
-    }
-});
 
 async function getBannerData() {
     let animes = await fetchAnime(SEARCH.popular);
@@ -224,26 +229,29 @@ async function getTopListData() {
         anime_names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
         anime_imgs[i].src = animes[i][ANIME.image];
         anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
-        anime_episodes[i].innerHTML = animes[i][ANIME.episodes];
+        anime_episodes[i].innerHTML = 'Episodes: ' + animes[i][ANIME.episodes];
     }
 }
 
 async function getMovieListData() {
     let animes = await fetchAnime(SEARCH.movies);
-    let anime_imgs = document.querySelectorAll('.movie-img');
-    let anime_names = document.querySelectorAll('.movie-name');
+    let imgs = document.querySelectorAll('.movie-img');
+    let names = document.querySelectorAll('.movie-name');
+    let genres = document.querySelectorAll('.movie-genres');
 
 
     for(let i=0; i<MAX_ANIME; i++) {
-        anime_names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
-        anime_imgs[i].src = animes[i][ANIME.image];
-        anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
+        names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
+        imgs[i].src = animes[i][ANIME.image];
+        imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
+        let g = animes[i][ANIME.genres].join(', ');
+        genres[i].innerHTML = g;
     }
 }
 
 async function getRecentData() {
     let animes = await fetchAnime(SEARCH.recent);
-    if(animes.statusCode) {
+    if(animes.message) {
         animes = await fetchAnime(SEARCH.recent_2);
     }
     let anime_imgs = document.querySelectorAll('.recent-img');
@@ -274,6 +282,33 @@ function toAnimePage(id, type) {
     }
     anime_name = anime_name[id].innerHTML;
     console.log(anime_name);
+}
+
+function toSearchPage(type, search='') {
+    console.log(fetchAnime(type, search));
+}
+
+function randomSearch() {
+    console.log(fetchRandomAnime());
+}
+
+function movieSearch() {
+    toSearchPage(SEARCH.movies);
+}
+
+function getSeason() {
+    let d = new Date;
+    let s = Math.floor((d.getMonth() / 12 * 4)) % 4;
+    return [SEASON[s], d.getFullYear()];
+}
+
+function seasonSearch() {
+    let season;
+    let year;
+    [season, year] = getSeason();
+    let search = SEARCH.season + season + SEARCH.year + year;
+
+    toSearchPage(search);
 }
 
 createBanner();

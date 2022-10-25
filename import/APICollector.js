@@ -71,3 +71,9 @@ async function fetchAnime(type, key='') {
     let data = await api_response.json();
     return data.results;
 }
+
+async function fetchRandomAnime() {
+    let api_response = await fetch(API_LINK + SEARCH.random);
+    let data = await api_response.json();
+    return data;
+}

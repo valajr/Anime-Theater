@@ -271,6 +271,7 @@
     width: calc(100% - 10px);
     height: 30px;
     font-size: 16px;
+    font-weight: bold;
     margin: 0;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -278,10 +279,12 @@
     padding: 0 0 10px 10px;
 }
 
-.top-episodes {
+.top-episodes, .movie-genres {
     width: 100%;
     text-align: start;
     padding: 0 0 10px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .top-anime:hover, .movie-anime:hover {
