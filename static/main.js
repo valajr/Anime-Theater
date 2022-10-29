@@ -1,53 +1,7 @@
-const API_LINK = 'https://api.consumet.org/meta/anilist/';
-
-const SEARCH = {
-    'by_name': '',
-    'recent': 'recent-episodes?provider=zoro&page=1&perPage=25',
-    'recent_2': 'recent-episodes?provider=gogoanime',
-    'advanced': 'advanced-search/',
-    'by_genre': 'genre?genres=',
-    'random': 'random-anime',
-    'trending': 'trending',
-    'popular': 'popular',
-    'info': 'info/',
-    'stream': 'watch/',
-    'movies': 'advanced-search?format=MOVIE',
-    'season': 'advanced-search?season=',
-    'year': '&year='
-}
-
-const ANIME = {
-    'title': 'title',
-    'rom': 'romaji',
-    'eng': 'english',
-    'nat': 'native',
-    'image': 'image',
-    'status': 'status',
-    'episodes': 'totalEpisodes',
-    'synopsis': 'description',
-    'genres': 'genres'
-}
-
-const GENRE = ["Action", "Adventure", "Cars", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", 
-            "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", 
-            "Supernatural", "Thriller"];
-
-const SEASON = ['WINTER', 'SPRING', 'SUMMER', 'FALL'];
-
 const MAX_ANIME = 5;
 const MAX_ANIME_API = 10;
 let banner_timeout = null;
 let slide_banner = 0;
-
-function createElementHTML(tag, cl='dynamic', text='', action='') {
-    let element = document.createElement(tag);
-    
-    element.classList.add(cl);
-    element.innerHTML = text;
-    element.onclick = action;
-
-    return element;
-}
 
 let search = document.querySelector('#searchName');
 search.addEventListener("keypress", async function(event) {
@@ -174,7 +128,7 @@ function toBanner(id) {
 }
 
 async function getBannerData() {
-    let animes = await fetchAnime(SEARCH.popular);
+    let animes = await fetchAnimeResult(SEARCH.popular);
     let anime_names = document.querySelectorAll('.anime-name');
     let anime_imgs = document.querySelectorAll('.anime-img');
     let anime_synopses = document.querySelectorAll('.anime-synopsis');
@@ -184,7 +138,7 @@ async function getBannerData() {
         anime_names[i].innerHTML = animes[i][ANIME.title][ANIME.rom];
         anime_imgs[i].src = animes[i][ANIME.image];
         anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
-        let anime_detail = await fetchAnime(SEARCH.by_name, animes[i][ANIME.title][ANIME.rom]);
+        let anime_detail = await fetchAnimeResult(SEARCH.by_name, animes[i][ANIME.title][ANIME.rom]);
         if(anime_detail.length > 1)
             anime_detail = anime_detail[0];
         anime_synopses[i].innerHTML = anime_detail[ANIME.synopsis];
@@ -219,7 +173,7 @@ function showCarousel(prev=false) {
 }
 
 async function getTopListData() {
-    let animes = await fetchAnime(SEARCH.trending);
+    let animes = await fetchAnimeResult(SEARCH.trending);
     let anime_imgs = document.querySelectorAll('.top-img');
     let anime_names = document.querySelectorAll('.top-name');
     let anime_episodes = document.querySelectorAll('.top-episodes');
@@ -234,7 +188,7 @@ async function getTopListData() {
 }
 
 async function getMovieListData() {
-    let animes = await fetchAnime(SEARCH.movies);
+    let animes = await fetchAnimeResult(SEARCH.movies);
     let imgs = document.querySelectorAll('.movie-img');
     let names = document.querySelectorAll('.movie-name');
     let genres = document.querySelectorAll('.movie-genres');
@@ -250,9 +204,9 @@ async function getMovieListData() {
 }
 
 async function getRecentData() {
-    let animes = await fetchAnime(SEARCH.recent);
+    let animes = await fetchAnimeResult(SEARCH.recent);
     if(animes.message) {
-        animes = await fetchAnime(SEARCH.recent_2);
+        animes = await fetchAnimeResult(SEARCH.recent_2);
     }
     let anime_imgs = document.querySelectorAll('.recent-img');
     let anime_names = document.querySelectorAll('.recent-name');
@@ -263,52 +217,6 @@ async function getRecentData() {
         anime_imgs[i].src = animes[i][ANIME.image];
         anime_imgs[i].alt = animes[i][ANIME.title][ANIME.rom];
     }
-}
-
-function toAnimePage(id, type) {
-    let anime_name;
-    switch(type) {
-        case 'banner':
-            anime_name = document.querySelectorAll('.anime-name');
-            break;
-        case 'top':
-            anime_name = document.querySelectorAll('.top-name');
-            break;
-        case 'movie':
-            anime_name = document.querySelectorAll('.movie-name');
-            break;
-        case 'recent':
-            anime_name = document.querySelectorAll('.recent-name');
-    }
-    anime_name = anime_name[id].innerHTML;
-    console.log(anime_name);
-}
-
-function toSearchPage(type, search='') {
-    console.log(fetchAnime(type, search));
-}
-
-function randomSearch() {
-    console.log(fetchRandomAnime());
-}
-
-function movieSearch() {
-    toSearchPage(SEARCH.movies);
-}
-
-function getSeason() {
-    let d = new Date;
-    let s = Math.floor((d.getMonth() / 12 * 4)) % 4;
-    return [SEASON[s], d.getFullYear()];
-}
-
-function seasonSearch() {
-    let season;
-    let year;
-    [season, year] = getSeason();
-    let search = SEARCH.season + season + SEARCH.year + year;
-
-    toSearchPage(search);
 }
 
 createBanner();

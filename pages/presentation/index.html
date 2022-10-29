@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script defer src="main.js"></script>
+    <script defer src="../../import/navigation.js"></script>
+    <script src="../../import/APICollector.js"></script>
+    <script src="../../import/toolbox.js"></script>
+
+    <link rel="stylesheet" href="https://valajr.github.io/BlueDog/import/style.css">
+    <link rel="stylesheet" href="../../import/style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="bd-header bd-pattern">
+        <div class="bd-header-content">
+            <img src="#" alt="-" class="bd-header-logo">
+            <div class="bd-header-navigator">
+                <button class="bd-btn bd-btn-transparent bd-header-item" onclick="toHomePage()">Home</button>
+                <button class="bd-btn bd-btn-transparent bd-header-item" onclick="randomSearch()"> Random anime</button>
+                <button class="bd-btn bd-btn-transparent bd-header-item" onclick="movieSearch()">Movies</button>
+                <button class="bd-btn bd-btn-transparent bd-header-item" onclick="seasonSearch()">Animes of the season</button>
+            </div>
+            <input type="search" id="searchName" class="bd-pattern bd-header-item" placeholder="Search by name">
+        </div>
+    </header>
+    <div class="container">
+        <div class="anime-data bd-pattern"></div>
+        <div class="anime-episodes"></div>        
+    </div>
+</body>
+</html>

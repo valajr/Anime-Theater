@@ -9,7 +9,7 @@
             pp= (gogoanime) 11, (zoro) 18
 
     advanced: 
-        https://api.consumet.org/meta/anilist/advanced-search/{query}
+        https://api.consumet.org/meta/anilist/advanced-search?query={query}
             {query}= {anime name}
             ?type= ["ANIME", "MANGA]
             ?page= {number}?1
@@ -65,15 +65,57 @@
         https://api.consumet.org/meta/anilist/watch/{episodeId}
             {episodeId}= {anime-name}+[-episode]+{number}
 */
+const API_LINK = 'https://api.consumet.org/meta/anilist/';
+
+const SEARCH = {
+    'by_name': '',
+    'recent': 'recent-episodes?provider=zoro&page=1&perPage=25',
+    'recent_2': 'recent-episodes?provider=gogoanime',
+    'advanced': 'advanced-search?query=',
+    'by_genre': 'genre?genres=',
+    'random': 'random-anime',
+    'trending': 'trending',
+    'popular': 'popular',
+    'info': 'info/',
+    'stream': 'watch/',
+    'movies': 'advanced-search?format=MOVIE',
+    'season': 'advanced-search?season=',
+    'year': '&year='
+}
+
+const ANIME = {
+    'title': 'title',
+    'rom': 'romaji',
+    'eng': 'english',
+    'nat': 'native',
+    'image': 'image',
+    'cover': 'cover',
+    'status': 'status',
+    'episodes': 'totalEpisodes',
+    'synopsis': 'description',
+    'genres': 'genres',
+    'rating': 'rating',
+    'type': 'type',
+    'year': 'releaseDate',
+    'id': 'id',
+    'relations': 'relations',
+    'relation_type': 'relationType'
+}
+
+const GENRE = ["Action", "Adventure", "Cars", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", 
+            "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", 
+            "Supernatural", "Thriller"];
+
+const SEASON = ['WINTER', 'SPRING', 'SUMMER', 'FALL'];
 
 async function fetchAnime(type, key='') {
     let api_response = await fetch(API_LINK + type + key);
     let data = await api_response.json();
-    return data.results;
+    return data;
 }
 
-async function fetchRandomAnime() {
-    let api_response = await fetch(API_LINK + SEARCH.random);
+async function fetchAnimeResult(type, key='') {
+    let api_response = await fetch(API_LINK + type + key);
     let data = await api_response.json();
-    return data;
+    return data.results;
 }

@@ -1,0 +1,161 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.anime-data.bd-pattern {
+    display: flex;
+    padding: 10px;
+    margin: 10px 12% 10px 12%;
+    width: 76%;
+}
+
+.left-side {
+    padding: 10px;
+    flex: 40%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    text-align: center;
+    font-size: 14px;    
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.left-side > span {
+    flex: 40%;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 2px solid var(--primary-medium-dark);
+    height: 20px;
+    background-color: var(--primary-medium-dark);
+}
+
+.anime-img {
+    width: 80%;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid var(--primary-medium-dark);
+    margin-bottom: 20px;
+}
+
+.anime-rating {
+    margin-left: 10%;
+}
+
+.anime-year {
+    margin-right: 10%;
+}
+
+.anime-status {
+    margin-left: 10%;
+}
+
+.anime-type {
+    margin-right: 10%;
+}
+
+.right-side {
+    padding: 0;
+    flex: 60%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+.anime-name {
+    font-weight: bold;
+    font-size: 30px;
+    padding: 20px;
+}
+
+.anime-genres {
+    font-size: 18px;
+    padding-bottom: 30px;
+}
+
+.anime-synopsis {
+    padding-right: 10px;
+    font-size: 16px;
+}
+
+.anime-relations {
+    margin-top: 10px;
+    width: 100%;
+    height: 175px;
+    overflow: overlay;
+    white-space: nowrap;
+    padding-bottom: 15px;
+}
+
+.anime-relations::-webkit-scrollbar {
+    display: none;
+}
+
+.anime-relations:hover::-webkit-scrollbar {
+    display: block;
+    width: 5px;
+    border-radius: 10px;
+}
+
+.anime-relations:hover::-webkit-scrollbar-track {
+    background: var(--primary-medium-dark);
+    width: 5px;
+    border-radius: 10px;
+}
+
+.anime-relations:hover::-webkit-scrollbar-thumb {
+    background: var(--primary-medium-light);
+    width: 5px;
+    border-radius: 10px;
+}
+
+.other-anime {
+    display: inline-block;
+    border-radius: 10px;
+    position: relative;
+    width: 100px;
+    height: 100%;
+    overflow: hidden;
+    --back-color: var(--primary-medium-dark);
+    border: 2px solid var(--back-color);
+    background-color: var(--back-color);
+}
+
+.other-anime:hover {
+    cursor: pointer;
+    --back-color: var(--primary-medium-light);
+}
+
+.relation-img {
+    width: 100%;
+    height: 140px;
+    position: absolute;
+    z-index: 0;
+    border: none;
+    border-radius: 10px 10px 0 0;
+}
+
+.other-anime > span {
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+    text-transform:capitalize;
+}
+
+.relation-type {
+    background-color: var(--back-color);
+    position: absolute;
+    top: 0;
+}
+
+.relation-name {
+    font-size: 15px;
+    position: absolute;
+    bottom: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
+}
