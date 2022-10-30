@@ -49,6 +49,9 @@ function toAnimePage(id, type) {
             break;
         case 'recent':
             anime_name = document.querySelectorAll('.recent-name');
+            break;
+        case 'relation':
+            anime_name = document.querySelectorAll('.relation-name');
     }
     localStorage.setItem('anime', anime_name[id].innerHTML);
     
@@ -56,7 +59,7 @@ function toAnimePage(id, type) {
     url = url.replace(/\/presentation\/index.html/g, '');
     url = url.replace(/\/search\/index.html/g, '');
     if(url.endsWith('pages'))
-        window.location.assign('./pages/presentation/index.html');
+        window.location.assign('../../pages/presentation/index.html');
     else
         window.location.assign('pages/presentation/index.html');
 }
