@@ -1,36 +1,5 @@
 let anime_data = document.querySelector('.anime-data');
 
-const BUSINESS_HOURS = {
-    '0':{
-        'opens': 15,
-        'closes': 22
-    },
-    '1':{
-        'opens': 10,
-        'closes': 00
-    },
-    '2':{
-        'opens': 12,
-        'closes': 00
-    },
-    '3':{
-        'opens': 17,
-        'closes': 00
-    },
-    '4':{
-        'opens': 10,
-        'closes': 22
-    },
-    '5':{
-        'opens': 10,
-        'closes': 02
-    },
-    '6':{
-        'opens': 13,
-        'closes': 01
-    }
-}
-
 const DAYS_MONTH = {
     '0': 31,
     '1': 28,
@@ -49,16 +18,9 @@ const DAYS_MONTH = {
 function openTicketModal() {
     let modal = document.querySelector('.ticket-modal');
     modal.style.display = 'block';
-
-    let menu = createElementHTML('ul', 'date-menu');
-    menu.classList.add('bd-btn-group');
-    let date = new Date();
-    let day = date.getDate();
-    let month = date.getMonth();
-    let hour = date.getHours();
-    let weekday = date.getDay();
-
-    let day_0 = createElementHTML('li', 'bd-btn', day + '/' + month);
+    let content = document.querySelector('.ticket-content');
+    if(content.innerHTML === '<span class="close">×</span>')
+        createTicketContent();
 }
 
 function closeTicketModal() {
@@ -132,7 +94,6 @@ async function createAnimePage() {
     let anime_episodes = createElementHTML('div', 'anime-episodes');
     let episode_separator = createElementHTML('span', 'episode-separator', 'Episodes: <br>');
     let episodes = ani_data.episodes;
-    console.log(episodes);
     for(let e=0; e<episodes.length; e++) {
         let episode_button = createElementHTML('button', 'episode-btn', episodes[e].number, openTicketModal);
         episode_button.classList.add('bd-btn', 'bd-btn-outline');
@@ -151,9 +112,10 @@ async function createAnimePage() {
     right_side = appendAll(right_side, [name, genres, synopsis]);
     if(relations.length)
         right_side.appendChild(anime_relations);
-    right_side = appendAll(right_side, [hr, episode_separator, anime_episodes, modal]);
+    right_side = appendAll(right_side, [hr, episode_separator, anime_episodes]);
     anime_data.appendChild(left_side);
     anime_data.appendChild(right_side);
+    anime_data.appendChild(modal);
 }
 
 window.onclick = function(event) {
@@ -165,4 +127,5 @@ window.onclick = function(event) {
 
 window.onload = () => {
     createAnimePage();
+    localStorage.removeItem('days-menu');
 }

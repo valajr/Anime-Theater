@@ -16,6 +16,28 @@
                 0 -5px 5px var(--primary-light);
 }
 
+.bd-btn-group > a {
+    margin: 0;
+    border-radius: 0;
+}
+
+.bd-btn-group > a + a {
+    border-left: none;
+    box-shadow: 0 5px 5px var(--primary-dark),
+                0 -5px 5px var(--primary-light);
+}
+
+.bd-btn-group > a:first-child {
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 5px 5px var(--primary-dark),
+                0 -5px 5px var(--primary-light);
+}
+
+.bd-btn-group > a:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
 .bd-header {
     padding: 0 12%;
     margin: 0;
